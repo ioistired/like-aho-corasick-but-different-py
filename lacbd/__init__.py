@@ -27,7 +27,7 @@ void deallocate_searcher(struct Searcher *result);
 """
 )
 
-C = ffi.dlopen(str(Path(__file__).parent / "liblike_aho_corasick_but_different.so"))
+C = ffi.dlopen(str(Path(__file__).parent / "liblacbd.so"))
 
 
 class Searcher:

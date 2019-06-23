@@ -1,8 +1,9 @@
 [tool.poetry]
-name = "like-aho-corasick-but-different"
-version = "0.1.0"
+name = "lacbd"
+version = "0.1.2"
 description = "Fast subsentence finding"
 authors = ["Ben Simms <ben@bensimms.moe>"]
+include = ["like_aho_corasick_but_different/liblike_aho_corasick_but_different.so"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
