@@ -1,0 +1,3 @@
+[submodule "like-aho-corasick-but-different-clib"]
+	path = like-aho-corasick-but-different-clib
+	url = git@github.com:nitros12/like-aho-corasick-but-different-clib.git
