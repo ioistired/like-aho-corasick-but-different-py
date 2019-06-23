@@ -41,14 +41,13 @@ class Searcher:
             self.__elements[idx].key = key
             self.__elements[idx].val = val
 
-        self.__searcher = C.new_searcher(self.__elements, len(elements))
+        self.__searcher = ffi.gc(
+            C.new_searcher(self.__elements, len(elements)), C.deallocate_searcher
+        )
 
     def search(self, haystack: str) -> List[str]:
         haystack = ffi.new("char[]", haystack.lower().encode("utf8"))
-        results = C.search_searcher(self.__searcher, haystack)
-        ret = [ffi.from_handle(results.values[i]) for i in range(results.length)]
-        C.deallocate_result(results)
-        return ret
-
-    def __del__(self):
-        C.deallocate_searcher(self.__searcher)
+        results = ffi.gc(
+            C.search_searcher(self.__searcher, haystack), C.deallocate_result
+        )
+        return [ffi.from_handle(results.values[i]) for i in range(results.length)]
