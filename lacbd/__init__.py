@@ -1,4 +1,4 @@
-from typing import Tuple, List, Any
+from typing import Tuple, Iterable, Any
 from pathlib import Path
 
 from cffi import FFI
@@ -31,7 +31,7 @@ C = ffi.dlopen(str(Path(__file__).parent / "liblacbd.so"))
 
 
 class Searcher:
-    def __init__(self, elements: List[Tuple[str, Any]]):
+    def __init__(self, elements: Iterable[Tuple[str, Any]]):
         # make sure values are kept alive
         self.__keys = [ffi.new("char[]", k.lower().encode("utf8")) for k, _ in elements]
         self.__values = [ffi.new_handle(v) for _, v in elements]
@@ -51,3 +51,6 @@ class Searcher:
             C.search_searcher(self.__searcher, haystack), C.deallocate_result
         )
         return [ffi.from_handle(results.values[i]) for i in range(results.length)]
+
+    def __class_getitem__(cls, item):
+        return f"{cls.__name__}[{item!r}]"
