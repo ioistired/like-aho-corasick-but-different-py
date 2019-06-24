@@ -6,9 +6,10 @@
 
 all: build
 
-build:
+build: FORCE
 	$(MAKE) -C like-aho-corasick-but-different-clib
 	cp like-aho-corasick-but-different-clib/target/release/liblike_aho_corasick_but_different.so lacbd/liblacbd.so
+FORCE:
 
 clean:
 	$(MAKE) -C like-aho-corasick-but-different-clib clean
