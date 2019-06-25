@@ -35,14 +35,14 @@ class Searcher:
         # make sure values are kept alive
         self.__keys = [ffi.new("char[]", k.lower().encode("utf8")) for k, _ in elements]
         self.__values = [ffi.new_handle(v) for _, v in elements]
-        self.__elements = ffi.new("struct SearchElement[]", len(elements))
+        elements = ffi.new("struct SearchElement[]", len(elements))
 
         for idx, (key, val) in enumerate(zip(self.__keys, self.__values)):
-            self.__elements[idx].key = key
-            self.__elements[idx].val = val
+            elements[idx].key = key
+            elements[idx].val = val
 
         self.__searcher = ffi.gc(
-            C.new_searcher(self.__elements, len(elements)), C.deallocate_searcher
+            C.new_searcher(elements, len(elements)), C.deallocate_searcher
         )
 
     def search(self, haystack: str) -> List[str]:
