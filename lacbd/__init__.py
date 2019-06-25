@@ -51,3 +51,6 @@ class Searcher:
 
     def __class_getitem__(cls, item):
         return f"{cls.__name__}[{item!r}]"
+
+    def __len__(self):
+        return len(self.__keys)
