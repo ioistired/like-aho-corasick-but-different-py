@@ -1,11 +1,10 @@
-from typing import Tuple, Sequence, Any
+from typing import List, Tuple, Collection, Any
 from pathlib import Path
 
 from cffi import FFI
 
 ffi = FFI()
-ffi.cdef(
-    """
+ffi.cdef("""
 struct Searcher {
     char private[0];
 };
@@ -24,25 +23,23 @@ struct Searcher *new_searcher(struct SearchElement *search_strings, size_t num_s
 struct SearchResult search_searcher(const struct Searcher *searcher, const char* haystack);
 void deallocate_result(struct SearchResult result);
 void deallocate_searcher(struct Searcher *result);
-"""
-)
+""")
 
 C = ffi.dlopen(str(Path(__file__).parent / "liblacbd.so"))
 
-
 class Searcher:
-    def __init__(self, elements: Sequence[Tuple[str, Any]]):
+    def __init__(self, elements: Collection[Tuple[str, Any]]):
         # make sure values are kept alive
         self.__keys = [ffi.new("char[]", k.lower().encode("utf8")) for k, _ in elements]
         self.__values = [ffi.new_handle(v) for _, v in elements]
-        self.__elements = ffi.new("struct SearchElement[]", len(elements))
+        elements = ffi.new("struct SearchElement[]", len(elements))
 
         for idx, (key, val) in enumerate(zip(self.__keys, self.__values)):
-            self.__elements[idx].key = key
-            self.__elements[idx].val = val
+            elements[idx].key = key
+            elements[idx].val = val
 
         self.__searcher = ffi.gc(
-            C.new_searcher(self.__elements, len(elements)), C.deallocate_searcher
+            C.new_searcher(elements, len(elements)), C.deallocate_searcher
         )
 
     def search(self, haystack: str) -> List[str]:
@@ -54,3 +51,6 @@ class Searcher:
 
     def __class_getitem__(cls, item):
         return f"{cls.__name__}[{item!r}]"
+
+    def __len__(self):
+        return len(self.__keys)
