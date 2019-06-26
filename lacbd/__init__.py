@@ -1,3 +1,5 @@
+import sys
+
 from typing import List, Tuple, Collection, Any
 from pathlib import Path
 
@@ -21,6 +23,8 @@ struct SearchResult {
 
 struct Searcher *new_searcher(struct SearchElement *search_strings, size_t num_strings);
 struct SearchResult search_searcher(const struct Searcher *searcher, const char* haystack);
+size_t searcher_size(const struct Searcher *searcher);
+size_t searcher_pattern_count(const struct Searcher *searcher);
 void deallocate_result(struct SearchResult result);
 void deallocate_searcher(struct Searcher *result);
 """)
@@ -48,6 +52,15 @@ class Searcher:
             C.search_searcher(self.__searcher, haystack), C.deallocate_result
         )
         return [ffi.from_handle(results.values[i]) for i in range(results.length)]
+
+    def pattern_count(self):
+        return C.searcher_pattern_count(self.__searcher)
+
+    def __sizeof__(self):
+        return (super().__sizeof__()
+                + C.searcher_size(self.__searcher)
+                + sum(sys.getsizeof(i) + sys.getsizeof(ffi.from_handle(i)) for i in self.__values)
+                + sum(sys.getsizeof(i) + len(i) for i in self.__keys))
 
     def __class_getitem__(cls, item):
         return f"{cls.__name__}[{item!r}]"
