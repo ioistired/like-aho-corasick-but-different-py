@@ -48,12 +48,15 @@ C = ffi.dlopen(str(next(Path(__file__).parent.parent.glob("_lacbd*"))))
 
 class Searcher:
     def __init__(self, elements: Collection[Tuple[str, Any]]):
+        # keys down't have to stay alive since the searcher makes a copy of them
+        keys = [ffi.new("char[]", k.lower().encode("utf8")) for k, _ in elements]
+
         # make sure values are kept alive
-        self.__keys = [ffi.new("char[]", k.lower().encode("utf8")) for k, _ in elements]
         self.__values = [ffi.new_handle(v) for _, v in elements]
+
         elements = ffi.new("struct SearchElement[]", len(elements))
 
-        for idx, (key, val) in enumerate(zip(self.__keys, self.__values)):
+        for idx, (key, val) in enumerate(zip(keys, self.__values)):
             elements[idx].key = key
             elements[idx].val = val
 
@@ -71,11 +74,10 @@ class Searcher:
     def __sizeof__(self):
         return (super().__sizeof__()
                 + C.searcher_size(self.__searcher)
-                + sum(sys.getsizeof(i) + sys.getsizeof(ffi.from_handle(i)) for i in self.__values)
-                + sum(sys.getsizeof(i) + len(i) for i in self.__keys))
+                + sum(sys.getsizeof(i) + sys.getsizeof(ffi.from_handle(i)) for i in self.__values))
 
     def __len__(self):
-        return len(self.__keys)
+        return len(self.__values)
 
     def __class_getitem__(cls, item):
         return f"{cls.__name__}[{item!r}]"
