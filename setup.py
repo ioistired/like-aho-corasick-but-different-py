@@ -37,9 +37,11 @@ setup(
     include_package_data=True,
 
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Operating System :: POSIX',
+        'Operating System :: Microsoft :: Windows',
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+        'Programming Language :: Rust',
         'Programming Language :: C',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
