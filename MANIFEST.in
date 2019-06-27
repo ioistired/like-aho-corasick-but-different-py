@@ -1,4 +1,3 @@
-include like-aho-corasick-but-different-clib/Cargo.toml
 include LICENSE
-recursive-include like-aho-corasick-but-different-clib/src *
+recursive-include src *
 
