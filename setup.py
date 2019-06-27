@@ -9,7 +9,7 @@ with open('README.md') as f:
 
 setup(
     name='lacbd',
-    version='0.1.4',
+    version='0.1.5',
     license='AGPL-3.0-or-later',
     description='Fast subsentence searching',
     long_description=long_description,
