@@ -1,1 +1,6 @@
-lacbd/liblacbd.*
+*.whl
+*.egg-info
+dist/
+__pycache__/
+.venv/
+venv/
