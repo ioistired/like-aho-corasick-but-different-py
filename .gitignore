@@ -1,3 +1,6 @@
+*.dll
+*.dylib
+*.so
 *.whl
 *.egg-info
 .eggs/
