@@ -13,7 +13,7 @@ for PYBIN in /opt/python/{cp36-cp36m,cp37-cp37m}/bin; do
     export PYTHON_SYS_EXECUTABLE="$PYBIN/python"
 
     "${PYBIN}/pip" install -U pyo3-pack
-    build; done
+    build --release --strip; done
 
 for whl in target/wheels/*.whl; do
     auditwheel repair "$whl" -w target/wheels/; done
