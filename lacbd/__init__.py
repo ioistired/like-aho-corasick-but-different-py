@@ -28,7 +28,8 @@ void deallocate_result(struct SearchResult result);
 void deallocate_searcher(struct Searcher *result);
 """)
 
-C = ffi.dlopen(str(Path(__file__).parent / "liblacbd.so"))
+# XXX is this a hack?
+C = ffi.dlopen(str(next(Path(__file__).parent.parent.glob("_lacbd*"))))
 
 class Searcher:
     def __init__(self, elements: Collection[Tuple[str, Any]]):
