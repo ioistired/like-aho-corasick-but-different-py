@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-from setuptools_rust import Binding, RustExtension
+from setuptools_rust import Binding, RustExtension, Strip
 
 setup(
     name='lacbd',
@@ -15,7 +15,7 @@ setup(
 
     packages=['lacbd'],
 
-	rust_extensions=[RustExtension('_lacbd', 'like-aho-corasick-but-different-clib/Cargo.toml', binding=Binding.NoBinding)],
+	rust_extensions=[RustExtension('_lacbd', 'like-aho-corasick-but-different-clib/Cargo.toml', binding=Binding.NoBinding, strip=Strip.All)],
 
     install_requires=[
         'cffi>=1.12,<2.0.0',
