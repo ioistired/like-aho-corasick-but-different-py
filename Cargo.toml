@@ -1,0 +1,38 @@
+[package]
+name = "lacbd"
+description = "Fast subsentence matching"
+license = "AGPL-3.0-or-later"
+repository = "https://github.com/nitros12/like-aho-corasick-but-different-py"
+version = "0.1.7"
+readme = "README.md"
+authors = ["Ben Simms <ben@bensimms.moe>", "Ben Mintz bmintz@protonmail.com"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "lacbd"
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+panic = "abort"
+
+[dependencies]
+like-aho-corasick-but-different = { git = "https://github.com/nitros12/like-aho-corasick-but-different", tag="0.1.5-owned"}
+pyo3 = { version = "0.7.0", features = ["extension-module"] }
+
+[package.metadata.pyo3-pack]
+classifier = [
+	'Development Status :: 4 - Beta',
+	'Operating System :: POSIX',
+	'Operating System :: Microsoft :: Windows',
+	'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+	'Programming Language :: Rust',
+	'Programming Language :: C',
+	'Programming Language :: Python',
+	'Programming Language :: Python :: 3 :: Only',
+	'Programming Language :: Python :: 3.6',
+	'Programming Language :: Python :: 3.7',
+	'Programming Language :: Python :: 3.8',
+	'Topic :: Software Development :: Libraries :: Python Modules']
