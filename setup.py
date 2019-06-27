@@ -6,7 +6,7 @@ from setuptools_rust import Binding, RustExtension, Strip
 
 setup(
     name='lacbd',
-    version='0.1.3',
+    version='0.1.4',
     license='AGPL-3.0-or-later',
     description='Fast subsentence finding',
     url='https://github.com/nitros12/like-aho-corasick-but-different-py',
