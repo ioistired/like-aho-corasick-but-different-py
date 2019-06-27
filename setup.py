@@ -4,11 +4,16 @@ from setuptools import setup
 
 from setuptools_rust import Binding, RustExtension, Strip
 
+with open('README.md') as f:
+    long_description = f.read()
+
 setup(
     name='lacbd',
     version='0.1.4',
     license='AGPL-3.0-or-later',
-    description='Fast subsentence finding',
+    description='Fast subsentence searching',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/nitros12/like-aho-corasick-but-different-py',
     author='Ben Simms, Ben Mintz',
     author_email='ben@bensimms.moe, bmintz@protonmail.com',
