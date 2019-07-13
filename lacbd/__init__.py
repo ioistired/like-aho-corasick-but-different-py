@@ -13,10 +13,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import importlib.util
 import sys
-
-from typing import List, Tuple, Collection, Any
-from pathlib import Path
+from typing import Any, Collection, List, Tuple
 
 from cffi import FFI
 
@@ -43,8 +42,7 @@ void deallocate_result(struct SearchResult result);
 void deallocate_searcher(struct Searcher *result);
 """)
 
-# XXX is this a hack?
-C = ffi.dlopen(str(next(Path(__file__).parent.parent.glob("_lacbd*"))))
+C = ffi.dlopen(importlib.util.find_spec('_lacbd').loader.get_filename())
 
 class Searcher:
     def __init__(self, elements: Collection[Tuple[str, Any]]):
