@@ -3,7 +3,7 @@
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
 # by the Free Software Foundation, either version 3 of the License, or
-#(at your option) any later version.
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,7 +20,8 @@ from typing import Any, Collection, List, Tuple
 from cffi import FFI
 
 ffi = FFI()
-ffi.cdef("""
+ffi.cdef(
+    """
 struct Searcher {
     char private[0];
 };
@@ -30,19 +31,32 @@ struct SearchElement {
   const void *val;
 };
 
+struct ExtendedResultElement {
+  const void *value;
+  size_t start, end;
+};
+
 struct SearchResult {
     void *const *const values;
     size_t length;
 };
 
+struct ExtendedSearchResult {
+  struct ExtendedResultElement *const values;
+  size_t length;
+};
+
 struct Searcher *new_searcher(struct SearchElement *search_strings, size_t num_strings);
 struct SearchResult search_searcher(const struct Searcher *searcher, const char* haystack);
+struct ExtendedSearchResult search_searcher_extended(const struct Searcher *searcher, const char* haystack);
 size_t searcher_size(const struct Searcher *searcher);
 void deallocate_result(struct SearchResult result);
+void deallocate_extended_result(struct ExtendedSearchResult result);
 void deallocate_searcher(struct Searcher *result);
-""")
+"""
+)
 
-C = ffi.dlopen(importlib.util.find_spec('_lacbd').loader.get_filename())
+C = ffi.dlopen(importlib.util.find_spec("_lacbd").loader.get_filename())
 
 class Searcher:
     def __init__(self, elements: Collection[Tuple[str, Any]]):
@@ -69,10 +83,27 @@ class Searcher:
         )
         return [ffi.from_handle(results.values[i]) for i in range(results.length)]
 
+    def search_extended(self, haystack: str) -> List[Tuple[str, int, int]]:
+        haystack = ffi.new("char[]", haystack.lower().encode("utf8"))
+        results = ffi.gc(
+            C.search_searcher_extended(self.__searcher, haystack),
+            C.deallocate_extended_result,
+        )
+
+        def extract(v):
+            return (ffi.from_handle(v.value), v.start, v.end)
+
+        return [extract(results.values[i]) for i in range(results.length)]
+
     def __sizeof__(self):
-        return (super().__sizeof__()
-                + C.searcher_size(self.__searcher)
-                + sum(sys.getsizeof(i) + sys.getsizeof(ffi.from_handle(i)) for i in self.__values))
+        return (
+            super().__sizeof__()
+            + C.searcher_size(self.__searcher)
+            + sum(
+                sys.getsizeof(i) + sys.getsizeof(ffi.from_handle(i))
+                for i in self.__values
+            )
+        )
 
     def __len__(self):
         return len(self.__values)
