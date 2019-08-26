@@ -14,14 +14,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import importlib.util
+import collections
 import sys
 from typing import Any, Collection, List, Tuple
 
 from cffi import FFI
 
 ffi = FFI()
-ffi.cdef(
-    """
+ffi.cdef("""
 struct Searcher {
     char private[0];
 };
@@ -53,10 +53,11 @@ size_t searcher_size(const struct Searcher *searcher);
 void deallocate_result(struct SearchResult result);
 void deallocate_extended_result(struct ExtendedSearchResult result);
 void deallocate_searcher(struct Searcher *result);
-"""
-)
+""")
 
 C = ffi.dlopen(importlib.util.find_spec("_lacbd").loader.get_filename())
+
+MatchResult = collections.namedtuple('MatchResult', 'value start end')
 
 class Searcher:
     def __init__(self, elements: Collection[Tuple[str, Any]]):
@@ -91,7 +92,7 @@ class Searcher:
         )
 
         def extract(v):
-            return (ffi.from_handle(v.value), v.start, v.end)
+            return MatchResult(ffi.from_handle(v.value), v.start, v.end)
 
         return [extract(results.values[i]) for i in range(results.length)]
 
