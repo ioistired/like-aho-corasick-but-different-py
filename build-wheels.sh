@@ -13,7 +13,9 @@ for PYBIN in /opt/python/{cp36-cp36m,cp37-cp37m}/bin; do
     export PYTHON_SYS_EXECUTABLE="$PYBIN/python"
 
     "${PYBIN}/pip" install -U setuptools setuptools-rust
-    "${PYBIN}/pip" wheel .; done
+    "${PYBIN}/pip" wheel . -w dist/ --no-deps; done
 
 for whl in dist/*.whl; do
     auditwheel repair "$whl" -w dist/; done
+
+rm dist/*-linux*.whl
