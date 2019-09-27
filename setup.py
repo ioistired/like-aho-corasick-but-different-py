@@ -9,7 +9,7 @@ with open('README.md') as f:
 
 setup(
     name='lacbd',
-    version='0.1.8',
+    version='0.1.9',
     license='AGPL-3.0-or-later',
     description='Fast subsentence searching',
     long_description=long_description,
@@ -20,17 +20,17 @@ setup(
 
     packages=['lacbd'],
 
-	rust_extensions=[RustExtension('_lacbd', 'like-aho-corasick-but-different-clib/Cargo.toml', binding=Binding.NoBinding, strip=Strip.All)],
+    rust_extensions=[RustExtension('_lacbd', 'like-aho-corasick-but-different-clib/Cargo.toml', binding=Binding.NoBinding, strip=Strip.All)],
 
     install_requires=[
         'cffi>=1.12,<2.0.0',
     ],
 
-	setup_requires=[
-		'wheel',
-		'setuptools',
-		'setuptools-rust',
-	],
+    setup_requires=[
+        'wheel',
+        'setuptools',
+        'setuptools-rust',
+    ],
 
     python_requires='>=3.6',
 
