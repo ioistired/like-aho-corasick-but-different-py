@@ -3,9 +3,11 @@
 *.so
 *.whl
 *.egg-info
+*.dist-info
 .eggs/
 build/
 dist/
+pip-wheel-metadata/
 __pycache__/
 .venv/
 venv/
