@@ -1,7 +1,7 @@
 {
-    "language": "python",
+    "language": "generic",
     "os": "linux",
-    "dist": "xenial",
+    "dist": "bionic",
     "jobs": {
         "include": [
             {
@@ -39,6 +39,7 @@
         ]
     },
     "install": [
+        "curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=stable -y",
         "python3 -m pip install 'cibuildwheel>=1.4.2,<2.0.0'"
     ],
     "script": [
